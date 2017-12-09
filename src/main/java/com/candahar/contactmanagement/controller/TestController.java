@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  *
- * @author User
+ * @author Jajang Jayus
  */
 
 @Controller
 public class TestController {
-    @RequestMapping("/test/hello")
+    @RequestMapping("/hello")
     public String hello(){
         return "hello"; // -> /WEB-INF/view/hello.jsp
     }

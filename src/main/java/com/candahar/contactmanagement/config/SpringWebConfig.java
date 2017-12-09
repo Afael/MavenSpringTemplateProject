@@ -13,7 +13,7 @@ import org.springframework.web.servlet.view.JstlView;
 
 /**
  *
- * @author User
+ * @author Jajang Jayus
  */
 @Configuration
 @ComponentScan(basePackages = {"com.candahar"})
@@ -22,7 +22,7 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter{
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        
+        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
     }
     
     @Bean

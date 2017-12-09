@@ -11,7 +11,7 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 
 /**
  *
- * @author User
+ * @author Jajang Jayus
  */
 public class ContactManagementDispatcherServletInitializer 
         extends AbstractAnnotationConfigDispatcherServletInitializer {
