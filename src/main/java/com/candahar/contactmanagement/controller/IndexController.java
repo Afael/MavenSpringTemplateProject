@@ -9,6 +9,7 @@ import com.candahar.contactmanagement.command.LoginCommand;
 import com.candahar.contactmanagement.domain.ContactPerson;
 import com.candahar.contactmanagement.exception.ContactBlockException;
 import com.candahar.contactmanagement.service.ContactPersonService;
+import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,20 +34,24 @@ public class IndexController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String login(@ModelAttribute("command") LoginCommand loginCommand, Model model) {
+    public String login(@ModelAttribute("command") LoginCommand loginCommand, Model model, HttpSession session) {
         try {
             ContactPerson contactPerson = contactPersonService.login(loginCommand.getLoginName(), loginCommand.getPassword());
             if (contactPerson == null) {
                 //add error message and go back to login page
-                model.addAttribute("err", "Login Failed, Please review your input");
+                model.addAttribute("err", "Login Failed, Please review your credential");
                 return "index";
             } else {
                 //Success
                 //Check the role and redirect to a appropriate dashboard
                 switch (contactPerson.getContactPersonRole()) {
                     case ContactPersonService.ROLE_ADMIN:
+                        //add Contact detail in session (assign session to logged in Contact)
+                        addUserInSession(contactPerson, session);
                         return "redirect:admin/dashboard";
                     case ContactPersonService.ROLE_USER:
+                        //add Contact detail in session (assign session to logged in Contact)
+                        addUserInSession(contactPerson, session);
                         return "redirect:contact/dashboard";
                     default:
                         //add error message and go back to login page
@@ -69,5 +74,17 @@ public class IndexController {
     @RequestMapping(value = "/admin/dashboard")
     public String adminDashboard() {
         return "dashboard_admin"; //JSP - /WEB-INF/view/dashboard_admin.jsp
+    }
+    
+    @RequestMapping(value = "/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:index?act=lo"; //JSP - /WEB-INF/view/index.jsp
+    }
+    
+    private void addUserInSession(ContactPerson contactPerson, HttpSession session){
+        session.setAttribute("ContactPerson", contactPerson);
+        session.setAttribute("ContactPersonId", contactPerson.getContactPersonId());
+        session.setAttribute("ContactPersonRole", contactPerson.getContactPersonRole());
     }
 }
